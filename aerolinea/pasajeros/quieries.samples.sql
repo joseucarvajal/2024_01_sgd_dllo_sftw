@@ -18,7 +18,7 @@ SELECT origen as desde, destino as hasta, aerolinea as operador
 FROM vuelos
 WHERE origen = 'manizales'
 
---Los vuelos que llegan a Cartagena provenientes de Manizales y Medellin
+--Los vuelos que llegan a Cartagena provenientes de Manizales y/o Medellin
 SELECT origen as desde, destino as hasta, aerolinea as operador
 FROM vuelos
 WHERE destino = 'cartagena' AND origen = 'manizales'

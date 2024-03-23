@@ -12,14 +12,24 @@
         <?php 
             if(isset($_GET["destino"])){
                 $destino = $_GET["destino"];
-                echo "Busqueda por $destino";
+                echo "Busqueda por $destino <br/><br/>";
 
                 $dbuser = "root";
                 $dbpassword = "";
         
                 $conn = new PDO("mysql:host=localhost;dbname=aerolinea", $dbuser, $dbpassword);
-                $consultaSQL = $conn->prepare("SELECT origen, destino, aerolinea FROM vuelos WHERE destino = '$destino'");
-                $consultaSQL->execute();
+                
+                //Vulnerable
+                //$sentencia = "SELECT origen, destino, aerolinea FROM vuelos WHERE destino = '$destino'";
+
+                //Seguro
+                $sentencia = "SELECT origen, destino, aerolinea FROM vuelos WHERE destino = :destino;";
+
+                $consultaSQL = $conn->prepare($sentencia);
+
+                $consultaSQL->execute(array(
+                    ':destino' => $destino,
+                ));
         ?>
         <table border="1">
             <tr>
