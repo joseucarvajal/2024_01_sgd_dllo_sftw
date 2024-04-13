@@ -5,7 +5,10 @@
     <body>
         <h1>Registrese a esta super pagina que no hace nada</h1>
         <img src="imagen_reg.avif" />
+        <div id="div-mensaje">
 
+        </div>
+        <br/>
         <form action="">
             nombre: <input type="text" name="nombre" id="nombre" onkeypress="onNombreKeyPress(this);"/> <br>
             Fecha de nacimiento <input type="date" name="fechaNacimiento"> <br>
@@ -32,7 +35,9 @@
                 if(nombreElement.value == ''){
                     nombreElement.style.background = 'red';
                     nombreElement.focus();
-                    alert('Por favor ingrese el nombre.');
+
+                    document.querySelector('body').querySelector('div').innerHTML =  'Por favor ingrese el nombre.';
+                    document.querySelector('body').querySelector('div').style.color = 'red';
                 }
                 console.log({nombreElement});
             }
