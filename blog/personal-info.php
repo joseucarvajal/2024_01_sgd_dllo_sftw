@@ -2,8 +2,12 @@
 session_start();
 
             try {
-                if(isset($_POST["username"])){
-                    $username = $_POST["username"];
+
+                if(isset($_SESSION["username_logueado"])){
+            
+                    $cardNroValue = "";
+                    $cardCvValue = "";
+                    $cardFvValue = "";
 
                     $dbuser = "root";
                     $dbpassword = "";
@@ -11,17 +15,44 @@ session_start();
                     $conn = new PDO("mysql:host=localhost;dbname=blog", $dbuser, $dbpassword);
                     $dbuser = "";
                     $dbpassword = "";
-                    $query = "SELECT username, password FROM `users` WHERE username = :username;";
+                    $query = "SELECT cardNro, cardCv, cardFv FROM `users` WHERE username = :username;";
                     $q =  $conn->prepare($query);
                     $result = $q->execute(array(
-                        ':username' => $username,
+                        ':username' => $_SESSION["username_logueado"],
                     ));
-                    if($q->rowCount() == 1){
-                        header("location: personal-info.php");
-                    }
-                    else {
-                        echo "Usuario o clave no validos";
-                    }
+
+                    $row = $q->fetch();
+                    $cardNroValue = $row["cardNro"];
+                    $cardCvValue = $row["cardCv"];
+                    $cardFvValue = $row["cardFv"];
+                }
+
+                if(isset($_POST["cardNro"]) && isset($_POST["cardCv"]) && isset($_POST["cardFv"]) ){
+                    $cardNro = $_POST["cardNro"];
+                    $cardCv = $_POST["cardCv"];
+                    $cardFv = $_POST["cardFv"];
+
+                    $cardNroValue = $cardNro;
+                    $cardCvValue = $cardCv;
+                    $cardFvValue = $cardFv;
+
+
+                    $dbuser = "root";
+                    $dbpassword = "";
+            
+                    $conn = new PDO("mysql:host=localhost;dbname=blog", $dbuser, $dbpassword);
+                    $dbuser = "";
+                    $dbpassword = "";
+
+                    $query = "UPDATE `users` SET cardNro=:cardNro, cardCv=:cardCv, cardFv=:cardFv WHERE username=:username";
+                    $q =  $conn->prepare($query);
+                    $result = $q->execute(array(
+                        ':cardNro' => $cardNro,
+                        ':cardCv' => $cardCv,
+                        ':cardFv' => $cardFv,
+                        ':username' => $_SESSION["username_logueado"]
+                    ));
+
                 }
             }
             catch(Exception $e){
@@ -34,11 +65,13 @@ session_start();
     </head>
     <body>
             <h1>Bienvenido <b><?php echo $_SESSION["username_logueado"]; ?></b></h1>
-        <h2>Personal info</h2>
+            <a href="index.php">Home</a>
+        <h2>Datos personales</h2>
         <form action="" method="post">
-            user name <input type="text" name="username"> <br/>
-            Password <input type="password" name="password"> <br/>
-            <input type="submit" value="Login"> <br/>
+            Nro tarjeta <input type="text" name="cardNro" value="<?php echo $cardNroValue; ?>"> <br/>
+            CVC <input type="text" name="cardCv" value="<?php echo $cardCvValue; ?>"> <br/>
+            Fecha de vencimiento <input type="text" name="cardFv" value="<?php echo $cardFvValue; ?>"> <br/>
+            <input type="submit" value="Actualizar"> <br/>
         </form>
     </body>
 </html>
