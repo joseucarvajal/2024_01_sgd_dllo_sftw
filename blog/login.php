@@ -21,6 +21,7 @@ try {
         if($q->rowCount() == 1){
             $_SESSION["username_logueado"] = $username;
             $_SESSION["usuario_esta_logueado"] = true;
+            $_SESSION['lastaccess'] = time();
             header("location: personal-info.php");
         }
         else {
